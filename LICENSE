@@ -1,0 +1,70 @@
+Copyright (c) 2026 Mingi Hong (홍민기)
+
+Isotope Bench is licensed under the
+Creative Commons Attribution-NonCommercial 4.0 International License
+(CC BY-NC 4.0).
+
+SPDX-License-Identifier: CC-BY-NC-4.0
+
+Full legal code (canonical, authoritative):
+    https://creativecommons.org/licenses/by-nc/4.0/legalcode
+Human-readable summary (not a substitute for the license):
+    https://creativecommons.org/licenses/by-nc/4.0/
+
+The canonical text at the URL above governs. The summary below is provided
+for convenience only and has no legal force.
+
+
+SUMMARY OF TERMS
+
+You are free to:
+
+  Share  — copy and redistribute the material in any medium or format
+  Adapt  — remix, transform, and build upon the material
+
+Under the following terms:
+
+  Attribution  — You must give appropriate credit, provide a link to the
+                 license, and indicate if changes were made. You may do so
+                 in any reasonable manner, but not in any way that suggests
+                 the licensor endorses you or your use.
+
+  NonCommercial — You may not use the material for commercial purposes.
+
+  No additional restrictions — You may not apply legal terms or
+                 technological measures that legally restrict others from
+                 doing anything the license permits.
+
+Notices:
+
+  You do not have to comply with the license for elements of the material
+  in the public domain or where your use is permitted by an applicable
+  exception or limitation.
+
+  No warranties are given. The license may not give you all of the
+  permissions necessary for your intended use. For example, other rights
+  such as publicity, privacy, or moral rights may limit how you use the
+  material.
+
+
+NOTE ON THIRD-PARTY DATA
+
+The isotope masses and natural abundances used by this program are values
+published by NIST (Atomic Weights and Isotopic Compositions), extracted via
+the molmass package. They are measured physical constants and are not
+claimed as part of this work. The literature linked in the briefings and
+appendices belongs to its respective publishers and is referenced, not
+redistributed.
+
+
+한국어 안내
+
+이 저작물은 크리에이티브 커먼즈 저작자표시-비영리 4.0 국제 라이선스
+(CC BY-NC 4.0)에 따라 이용할 수 있습니다.
+
+출처를 밝히면 자유롭게 복제·배포·개작할 수 있으나, 상업적 목적으로는
+이용할 수 없습니다. 개작한 경우 변경 사실을 표시해야 합니다.
+
+법적 효력을 갖는 것은 위 URL의 영문 정본입니다.
+한국어 요약은 다음에서 볼 수 있습니다.
+    https://creativecommons.org/licenses/by-nc/4.0/deed.ko

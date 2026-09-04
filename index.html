@@ -760,29 +760,30 @@ const PATTERNS = [
   {id:"S2",   label:P("S 2개","2 × S"),     add:{S:2},         tier:5}
 ];
 
-// 중성 손실. req 는 "이 원자가 이만큼은 있어야 그럴듯하다"는 최소 조건.
+// 중성 손실. 어떤 화합물에서 어떤 손실이 나오는지는 COMPOUNDS 의 losses 가 정하고,
+// 여기서는 손실 자체의 분자식과 등장 난이도만 정의한다.
 // 실제 절단 규칙이 아니라 분자식 수준의 타당성 필터입니다.
 const LOSSES = [
-  {id:"H2O",   label:"H₂O",       f:"H2O",    req:{O:1},        tier:1},
-  {id:"NH3",   label:"NH₃",       f:"NH3",    req:{N:1},        tier:1},
-  {id:"CO2",   label:"CO₂",       f:"CO2",    req:{O:2},        tier:1},
-  {id:"CO",    label:"CO",        f:"CO",     req:{O:1},        tier:2},
-  {id:"C2H4",  label:"C₂H₄",      f:"C2H4",   req:{C:4},        tier:2},
-  {id:"CH3OH", label:"CH₃OH",     f:"CH4O",   req:{O:1,C:2},    tier:2},
-  {id:"CH2O",  label:"CH₂O",      f:"CH2O",   req:{O:1,C:2},    tier:2},
-  {id:"HCOOH", label:"HCOOH",     f:"CH2O2",  req:{O:2,C:2},    tier:3},
-  {id:"C3H6",  label:"C₃H₆",      f:"C3H6",   req:{C:5},        tier:3},
-  {id:"CH2CO", label:"CH₂=C=O",   f:"C2H2O",  req:{O:1,C:3},    tier:3},
-  {id:"HCl",   label:"HCl",       f:"HCl",    req:{Cl:1},       tier:3},
-  {id:"HNCO",  label:"HNCO",      f:"CHNO",   req:{N:1,O:1},    tier:3},
-  {id:"C2H6",  label:"C₂H₆",      f:"C2H6",   req:{C:4},        tier:4},
-  {id:"C3H8",  label:"C₃H₈",      f:"C3H8",   req:{C:5},        tier:4},
-  {id:"AcOH",  label:"CH₃COOH",   f:"C2H4O2", req:{O:2,C:3},    tier:4},
-  {id:"EtOH",  label:"C₂H₅OH",    f:"C2H6O",  req:{O:1,C:3},    tier:4},
-  {id:"N2",    label:"N₂",        f:"N2",     req:{N:2},        tier:5},
-  {id:"HBr",   label:"HBr",       f:"HBr",    req:{Br:1},       tier:5},
-  {id:"HF",    label:"HF",        f:"HF",     req:{F:1},        tier:5},
-  {id:"H3PO4", label:"H₃PO₄",     f:"H3PO4",  req:{P:1,O:4},    tier:5}
+  {id:"H2O",   label:"H₂O",       f:"H2O",    tier:1},
+  {id:"NH3",   label:"NH₃",       f:"NH3",    tier:1},
+  {id:"CO2",   label:"CO₂",       f:"CO2",    tier:1},
+  {id:"CO",    label:"CO",        f:"CO",     tier:2},
+  {id:"C2H4",  label:"C₂H₄",      f:"C2H4",   tier:2},
+  {id:"CH3OH", label:"CH₃OH",     f:"CH4O",   tier:2},
+  {id:"CH2O",  label:"CH₂O",      f:"CH2O",   tier:2},
+  {id:"HCOOH", label:"HCOOH",     f:"CH2O2",  tier:3},
+  {id:"C3H6",  label:"C₃H₆",      f:"C3H6",   tier:3},
+  {id:"CH2CO", label:"CH₂=C=O",   f:"C2H2O",  tier:3},
+  {id:"HCl",   label:"HCl",       f:"HCl",    tier:3},
+  {id:"HNCO",  label:"HNCO",      f:"CHNO",   tier:3},
+  {id:"C2H6",  label:"C₂H₆",      f:"C2H6",   tier:4},
+  {id:"C3H8",  label:"C₃H₈",      f:"C3H8",   tier:4},
+  {id:"AcOH",  label:"CH₃COOH",   f:"C2H4O2", tier:4},
+  {id:"EtOH",  label:"C₂H₅OH",    f:"C2H6O",  tier:4},
+  {id:"N2",    label:"N₂",        f:"N2",     tier:5},
+  {id:"HBr",   label:"HBr",       f:"HBr",    tier:5},
+  {id:"HF",    label:"HF",        f:"HF",     tier:5},
+  {id:"H3PO4", label:"H₃PO₄",     f:"H3PO4",  tier:5}
 ].map(L => {
   const c = parseFormula(L.f);
   return Object.assign({}, L, {counts:c, mass:monoisotopicMass(c),

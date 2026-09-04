@@ -173,7 +173,8 @@ python3 -m http.server 8000    # → http://localhost:8000
 
 ## 라이선스 · 제작
 
-- 라이선스: **CC BY-NC 4.0** (출처를 밝히면 자유롭게 쓰고 고칠 수 있습니다. 상업적 이용은 제외)
+- 라이선스: **CC BY-NC 4.0** — 출처를 밝히면 자유롭게 쓰고 고칠 수 있습니다. 상업적 이용은 제외.
+  [`LICENSE`](LICENSE) 참고. 법적 효력을 갖는 것은 그 파일이 가리키는 정본입니다.
 - 제작: 홍민기 (Mingi Hong), 이학 석사
 - 문의: 이 저장소의 [Issues](https://github.com/MGHong98/Isotope-Bench/issues)
 
@@ -382,7 +383,8 @@ python3 -m http.server 8000    # → http://localhost:8000
 
 ## License and credits
 
-- License: **CC BY-NC 4.0** — free to use and modify with attribution, non-commercial
+- License: **CC BY-NC 4.0** — free to use and modify with attribution, non-commercial.
+  See [`LICENSE`](LICENSE); the canonical text it points to is what governs.
 - Author: Mingi Hong (홍민기), M.S.
 - Contact: the [Issues](https://github.com/MGHong98/Isotope-Bench/issues) tab of this repository
 
