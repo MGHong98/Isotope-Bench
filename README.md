@@ -48,7 +48,7 @@ open index.html          # macOS
 
 오답 보기는 무작위가 아니라 **입문자가 실제로 저지르는 실수**로 만들어져 있습니다.
 부가체를 빼지 않은 값, 빼야 할 것을 더한 값, 다른 부가체로 착각한 값 같은 것들입니다.
-난이도 3 이상에서는 공칭질량이 같은 손실(예: C₂H₆ 30.0470 대 CH₂O 30.0106)을
+난이도 3 이상에서는 공칭질량이 같은 손실(예: CO 27.9949 대 C₂H₄ 28.0313)을
 일부러 함께 내서, 고분해능이 왜 필요한지 숫자로 겪게 합니다.
 
 ### 난이도
@@ -59,8 +59,8 @@ open index.html          # macOS
 | 1 | CHNO · `[M+H]⁺` `[M+Na]⁺` · H₂O, NH₃ 손실 |
 | 2 | Cl, Br · `[M+K]⁺` `[M−H]⁻` · CO, C₂H₄ 손실 |
 | 3 | S, P · 2Na 폼·폼에이트 · 동일 공칭질량 손실 |
-| 4 | 혼합 알칼리 · 2가 이온 · C₂H₆ 대 CH₂O |
-| 5 | F, I, Si · N₂, HBr, H₃PO₄ 손실 |
+| 4 | 혼합 알칼리 · 2가 이온 · Br+Cl 혼합 패턴 |
+| 5 | F, I, Si · 2가 음이온 · H₃PO₄ 손실 |
 
 각 난이도에는 **브리핑**(왜 그렇게 되는가 · 실험대에서 · 기억할 숫자)이 붙어 있고,
 문헌 출처가 미주로 달려 있습니다. 난이도 0과 5에는 기기·이온화 개론과
@@ -145,7 +145,9 @@ open index.html          # macOS
 | `poly` | 산성 자리 둘 이상 → `[M−2H]²⁻` |
 
 `losses`에는 그 화합물에서 **실제로 관측되는** 손실 id만 적습니다.
-분자식만 맞으면 통과시키는 구조가 아니므로, 여기에 적지 않은 손실은 문제로 나오지 않습니다.
+분자식만 맞으면 통과시키는 구조가 아니므로, 여기에 적지 않은 손실은 정답으로 나오지 않습니다.
+어떤 화합물의 `losses`에도 없는 항목(C₂H₄, CH₂O, C₂H₆, N₂, HBr 등)은 오답 보기로만
+쓰입니다. 정답으로도 내려면 그 손실이 실제로 관측되는 화합물의 `losses`에 id를 넣으면 됩니다.
 
 문제 문장과 화면 문구는 모두 국문·영문 한 쌍으로 되어 있습니다.
 새 항목을 넣을 때 `P(ko, en)` 형태나 `T.ko` / `T.en` 양쪽을 함께 채워야
@@ -248,7 +250,7 @@ explanation once you answer.
 Distractors are not random. They are **the mistakes beginners actually make**: the
 value with the adduct never subtracted, the value with the adduct added instead of
 subtracted, the value from confusing one adduct for another. From level 3 up, losses
-with the same nominal mass (C₂H₆ at 30.0470 vs CH₂O at 30.0106) are deliberately put
+with the same nominal mass (CO at 27.9949 vs C₂H₄ at 28.0313) are deliberately put
 side by side, so you meet the case for high resolution as a number rather than a claim.
 
 ### Levels
@@ -259,8 +261,8 @@ side by side, so you meet the case for high resolution as a number rather than a
 | 1 | CHNO · `[M+H]⁺` `[M+Na]⁺` · H₂O, NH₃ losses |
 | 2 | Cl, Br · `[M+K]⁺` `[M−H]⁻` · CO, C₂H₄ losses |
 | 3 | S, P · di-sodium and formate · isobaric losses |
-| 4 | Mixed alkali · doubly charged ions · C₂H₆ vs CH₂O |
-| 5 | F, I, Si · N₂, HBr, H₃PO₄ losses |
+| 4 | Mixed alkali · doubly charged ions · mixed Br + Cl pattern |
+| 5 | F, I, Si · doubly charged anions · H₃PO₄ loss |
 
 Each level opens with a **briefing** (why it happens · at the bench · numbers to
 remember) with literature sources in the endnotes. Levels 0 and 5 carry an extra
@@ -353,7 +355,9 @@ The flags say which ionization is chemically available for that compound.
 
 `losses` lists only the loss ids **actually observed** for that compound. The generator
 does not accept a loss just because the formula allows it, so a loss you leave out here
-will never be asked.
+is never the keyed answer. Entries that appear in no compound's `losses` (C₂H₄, CH₂O,
+C₂H₆, N₂, HBr and others) are used only as distractors; to have one keyed as an answer,
+add its id to a compound where that loss is actually observed.
 
 Every question string and every piece of UI text exists as a Korean/English pair. When
 adding an entry, fill in both sides — either as `P(ko, en)` or in both `T.ko` and

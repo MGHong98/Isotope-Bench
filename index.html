@@ -294,10 +294,10 @@ const LEVELS = [
         en:"2 · Cl, Br · [M+K]⁺ / [M−H]⁻ · CO, C₂H₄ losses"},
   {v:3, ko:"3 · S·P · 2Na 폼·폼에이트 · 동일 공칭질량 손실",
         en:"3 · S, P · di-sodium & formate · isobaric losses"},
-  {v:4, ko:"4 · 혼합 알칼리 · 2가 이온 · C₂H₆ 대 CH₂O",
-        en:"4 · mixed alkali · doubly charged · C₂H₆ vs CH₂O"},
-  {v:5, ko:"5 · F·I·Si · N₂·HBr·H₃PO₄ 손실까지",
-        en:"5 · F, I, Si · N₂, HBr, H₃PO₄ losses"}
+  {v:4, ko:"4 · 혼합 알칼리 · 2가 이온 · Br+Cl 혼합 패턴",
+        en:"4 · mixed alkali · doubly charged · mixed Br + Cl pattern"},
+  {v:5, ko:"5 · F·I·Si · 2가 음이온 · H₃PO₄ 손실까지",
+        en:"5 · F, I, Si · doubly charged anions · H₃PO₄ loss"}
 ];
 
 const T = {
@@ -572,7 +572,18 @@ function convolve(a, b){
       else  { bucket.set(key, {m, p}); }
     }
   }
-  return [...bucket.values()].filter(d => d.p >= PRUNE).sort((u,v) => u.m - v.m);
+  // 버킷은 고정 격자라 경계를 사이에 둔 두 피크가 1 mDa 안이어도 갈라진다.
+  // 정렬한 뒤 이웃 간격으로 한 번 더 훑어야 피크 표에 같은 라벨이 두 줄로 남지 않는다.
+  const kept = [...bucket.values()].filter(d => d.p >= PRUNE).sort((u,v) => u.m - v.m);
+  const out = [];
+  for(const d of kept){
+    const last = out[out.length-1];
+    if(last && (d.m - last.m) * 1000 < MERGE_MDA){
+      last.m = (last.m*last.p + d.m*d.p) / (last.p + d.p);
+      last.p += d.p;
+    }else out.push({m:d.m, p:d.p});
+  }
+  return out;
 }
 
 // 원소 하나가 n개 있을 때의 분포 (이진 거듭제곱)
@@ -763,6 +774,9 @@ const PATTERNS = [
 // 중성 손실. 어떤 화합물에서 어떤 손실이 나오는지는 COMPOUNDS 의 losses 가 정하고,
 // 여기서는 손실 자체의 분자식과 등장 난이도만 정의한다.
 // 실제 절단 규칙이 아니라 분자식 수준의 타당성 필터입니다.
+// 어떤 화합물의 losses 에도 없는 항목(C2H4·CH2O·C2H6·N2·HBr 등)은 정답으로는 나오지 않고
+// 오답 보기로만 쓰인다. 정답으로도 내려면 그 손실이 실제로 관측되는 화합물의
+// losses 에 id 를 추가해야 한다.
 const LOSSES = [
   {id:"H2O",   label:"H₂O",       f:"H2O",    tier:1},
   {id:"NH3",   label:"NH₃",       f:"NH3",    tier:1},
@@ -1696,11 +1710,23 @@ function makeAdductQuestion(lv){
   };
 }
 
+// 부가체가 스스로 M+2 를 만들어 내는가.
+// 칼륨이 대표적이다. ⁴¹K 는 ³⁹K 대비 7.2% 라 [M+K]⁺ 는 할로젠이 하나도 없는 분자에도
+// M+2 를 7% 넘게 세운다. 이것은 황 하나(4.5%)보다도 큰 값이라,
+// 세기 비만 보고 답하는 패턴 문제에서는 올바로 읽은 답이 오답 처리된다.
+function addsOwnM2(ad){
+  return Object.keys(ad.add).some(el => {
+    const iso = ISO[el], base = iso[0];
+    return iso.some(([m, p]) => m - base[0] > 1.5 && p / base[1] > 0.01);
+  });
+}
+
 // 유형 B — 세기 패턴만 보여주고 할로젠·황 조성을 고르게 한다
 function makePatternQuestion(lv){
   const pool = PATTERNS.filter(p => p.tier <= lv);
   // 난이도 0에서는 풀이 비어 있다. 다른 유형으로 넘기도록 null 을 돌려준다.
-  const adPool = ADDUCTS.filter(a => a.tier <= lv && a.z === 1 && !Object.keys(a.sub).length);
+  const adPool = ADDUCTS.filter(a => a.tier <= lv && a.z === 1 &&
+                                     !Object.keys(a.sub).length && !addsOwnM2(a));
   if(!pool.length || !adPool.length) return null;
   const target = pick(pool);
   // 불포화도가 음수이거나 반정수인 분자식은 존재할 수 없으므로 다시 뽑는다
@@ -1944,7 +1970,12 @@ function runFinder(){
 
   if(neutralMass <= 0){ out.innerHTML = `<p class="sub">${t("tooSmall")}</p>`; return; }
 
-  const hits = findFormulas(neutralMass, tol, 25);
+  // 뺄 원자가 모자라 이 부가체를 만들 수 없는 후보는 계산 m/z 가 나오지 않는다.
+  // 표에 NaN 을 찍는 대신 후보에서 빼고, 개수도 남은 것만 센다.
+  // 넉넉히 받아 거른 뒤 자른다. 25개를 먼저 자르면 걸러진 만큼 표가 짧아진다.
+  const hits = findFormulas(neutralMass, tol, 80)
+                 .filter(x => ionFormula(x.c, ad))
+                 .slice(0, 25);
   if(!hits.length){
     out.innerHTML = `<p class="sub">${t("neutralMass")} ${neutralMass.toFixed(4)} — ${t("noCand")}</p>`;
     return;
@@ -1954,8 +1985,7 @@ function runFinder(){
           `<table><thead><tr><th>${t("thFormula")}</th><th class="num">${t("thCalcMz")}</th>` +
           `<th class="num">${t("thPpmErr")}</th><th class="num">${t("thRdb")}</th></tr></thead><tbody>`;
   hits.forEach(x => {
-    const ion = ionFormula(x.c, ad);
-    const calcMz = ion ? (monoisotopicMass(ion) - ad.z*ELECTRON) / az : NaN;
+    const calcMz = (monoisotopicMass(ionFormula(x.c, ad)) - ad.z*ELECTRON) / az;
     const ppmErr = (calcMz - mz) / mz * 1e6;
     h += `<tr><td>${formatFormula(x.c)}</td><td class="num">${calcMz.toFixed(4)}</td>` +
          `<td class="num">${ppmErr.toFixed(2)}</td><td class="num">${x.rdb}</td></tr>`;
@@ -2236,7 +2266,14 @@ document.getElementById("e-export").onclick = exportSave;
 document.getElementById("e-import").onclick = () => document.getElementById("e-file").click();
 document.getElementById("e-file").onchange = e => { if(e.target.files[0]) importSave(e.target.files[0]); };
 document.getElementById("e-reset").onclick = () => {
-  save = blankSave(); persist(); renderStats();
+  // 지우는 것은 기록이지 설정이 아니다. 보고 있던 언어와 난이도는 남긴다.
+  // renderAll 로 화면 전체를 다시 그려야 난이도 선택·브리핑이 세이브와 어긋나지 않는다.
+  const lv = save.level;
+  save = blankSave();
+  save.lang = LANG;
+  save.level = lv;
+  persist();
+  renderAll();
   document.getElementById("save-note").textContent = t("saveCleared");
 };
 
