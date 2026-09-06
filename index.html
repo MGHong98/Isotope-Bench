@@ -428,8 +428,8 @@ function deepFreeze(o){
 
 const BUILD = deepFreeze({
   app:        "Isotope Bench",
-  version:    "1.0.0",
-  built:      "2026-09-03",
+  version:    "1.1.0",
+  built:      "2026-09-04",
   author:     { ko: "홍민기",   en: "Mingi Hong" },
   degree:     { ko: "이학 석사", en: "M.S." },
   repo:       "https://github.com/MGHong98/Isotope-Bench",   // 이슈 탭이 연락 창구가 됩니다.
@@ -446,7 +446,7 @@ function canonical(v){
 }
 const buildCanonical = () => canonical(BUILD);
 
-const BUILD_DIGEST = "aa04c4a9ef97e2d9c9f659e59f472c37c75c1141ca712c687da4b42301c27fc1";
+const BUILD_DIGEST = "b0dc2c91082cefac539dc0549f3e7caa6abcee2125456e211b114990cbfeae28";
 
 async function buildHash(){
   try{
@@ -1113,6 +1113,131 @@ const APPENDIX_KO = {
        ["FT-ICR","10⁶ 이상 @ m/z 400, 정확도 ~0.1 ppm"],["EI 전자 에너지","70 eV"],
        ["R = 1,000 의 뜻","m/z 100.0 과 100.1 을 구분"]]
 },
+1:{
+  title:"부록 · 부가체(adduct)를 통제하기",
+  sections:[
+    {h:"왜 한 화합물이 여러 봉우리로 흩어지는가", items:[
+      "ESI는 분자를 부수지 않는 대신, 용액에 있는 것이면 무엇이든 달라붙습니다. 같은 화합물이 [M+H]⁺·[M+Na]⁺·[M+K]⁺·[M+NH₄]⁺로 나뉘면 신호도 그만큼 나뉩니다. 부가체를 한 종류로 모으는 것은 해석을 쉽게 할 뿐 아니라 감도를 직접 끌어올립니다.",
+      "어느 쪽이 우세한지는 분자가 정합니다. 아민이나 피리딘처럼 비공유 전자쌍을 내줄 자리가 있으면 양성자를 받아 [M+H]⁺가 되고, 당류처럼 염기성 자리 없이 산소만 많으면 그 산소들이 Na⁺를 크라운 에터처럼 감싸 [M+Na]⁺가 우세해집니다.",
+      "부가체 계열인지 확인하는 가장 빠른 방법은 간격입니다. 두 봉우리가 21.9819 떨어져 있으면 H와 Na가 바뀐 것이고, 37.9559면 H와 K입니다. 이 간격은 화합물이 무엇이든 변하지 않으므로 분자량을 몰라도 쓸 수 있습니다."
+    ]},
+    {h:"이합체와 소스 조각을 가려내기", items:[
+      "관측 m/z가 예상의 두 배쯤이면 이합체 [2M+H]⁺를 의심합니다. 판별은 희석입니다. 농도를 낮춰 사라지면 이합체이고, 다른 봉우리와 비율이 그대로면 별개의 화합물입니다.",
+      "반대로 예상보다 18 작으면 소스에서 이미 물이 빠진 [M+H−H₂O]⁺일 수 있습니다. CID를 걸기 전에 일어난 조각이라 전구 이온을 잘못 고르는 원인이 됩니다. 소스 전압(cone·fragmentor)을 낮추면 줄어듭니다.",
+      "크로마토그램을 함께 보는 습관이 필요합니다. 같은 머무름 시간에서 함께 오르내리면 한 화합물의 여러 이온이고, 따로 놀면 서로 다른 화합물입니다. m/z만 보고 판단하면 이 구분을 놓칩니다."
+    ]},
+    {h:"이동상으로 부가체를 통제하기", items:[
+      "폼산 0.1%를 넣으면 양성자 공급이 늘어 [M+H]⁺가 우세해지고 알칼리 부가체가 줄어듭니다. 다만 네거티브 모드에서는 탈양성자화를 방해해 신호를 죽이므로, 음이온 모드에서는 산을 빼거나 암모늄염으로 바꿉니다.",
+      "암모늄 폼에이트와 암모늄 아세테이트는 양쪽 모드에서 모두 쓸 수 있어 자주 선택됩니다. 포지티브에서는 [M+NH₄]⁺를, 네거티브에서는 [M+HCOO]⁻·[M+CH₃COO]⁻를 의도적으로 만들어 한 종류로 모으는 방식입니다.",
+      "소듐은 넣지 않아도 유리 기물에서 녹아 나옵니다. [M+H]⁺로 통일하고 싶으면 플라스틱 바이알을 쓰되, 가소제 피크가 따라오는 것은 감수해야 합니다. 가소제는 나오는 자리가 정해져 있어 걸러내기가 비교적 쉽습니다.",
+      "비휘발성 완충액은 LC-MS에서 쓰지 않습니다. 인산염·트리스·이온쌍 시약은 소스에 쌓여 오염을 만들고 이온화를 억제합니다. 휘발성 완충액만 쓰는 것이 원칙입니다."
+    ]}
+  ],
+  tools:[
+    ["폼산 0.1%",              "[M+H]⁺ 강화 · 네거티브 모드에서는 신호 감소"],
+    ["암모늄 폼에이트 5–10 mM", "[M+NH₄]⁺ / [M+HCOO]⁻ 로 모음 · 양쪽 모드 겸용"],
+    ["암모늄 아세테이트 5–10 mM", "중성 부근 pH 유지 · [M+CH₃COO]⁻"],
+    ["플라스틱 바이알",         "Na 유입 감소 · 대신 가소제 피크"],
+    ["인산염·트리스 완충액",     "쓰지 않음 — 비휘발성, 소스 오염"],
+    ["시료 희석",              "이합체 판별 · 이온 억제 완화"]
+  ],
+  ref:[["[M+Na]⁺ − [M+H]⁺","21.9819"],["[M+K]⁺ − [M+H]⁺","37.9559"],
+       ["[M+NH₄]⁺ − [M+H]⁺","17.0265"],["[M+H]⁺ − [M−H]⁻","2.0146"],
+       ["[M+H−H₂O]⁺ − [M+H]⁺","−18.0106"],["[2M+H]⁺","2M + 1.0073"]]
+},
+2:{
+  title:"부록 · 동위원소 패턴을 손으로 풀기",
+  sections:[
+    {h:"이항 전개로 직접 구하기", items:[
+      "표를 외울 필요는 없습니다. 염소가 n개면 (0.7576 + 0.2424)ⁿ 을 펼친 항이 그대로 M, M+2, M+4 …의 세기가 됩니다. n = 2면 0.574 : 0.367 : 0.059 이고, 가장 큰 값으로 나누면 100 : 64 : 10 입니다.[^1]",
+      "서로 다른 원소가 섞이면 각 원소의 전개를 곱합니다. Br 하나와 Cl 하나면 (0.5069 + 0.4931) × (0.7576 + 0.2424) 를 펼쳐 M : M+2 : M+4 가 100 : 129 : 31 이 됩니다.",
+      "실험실 탭의 계산 엔진이 하는 일도 정확히 이 곱셈입니다. 한 번 손으로 펼쳐 보면 표가 필요 없어집니다."
+    ]},
+    {h:"M+1 로 탄소 수를 어림하기", items:[
+      "¹³C 가 1.07% 이므로 탄소 하나가 M+1 에 약 1.1%를 보탭니다. M+1 이 기준 피크의 11% 라면 탄소가 대략 10개라는 뜻입니다.",
+      "질소도 하나당 0.36%를 더합니다. M+1 을 탄소만의 몫으로 보면 질소가 많은 분자에서 탄소를 과대평가하게 됩니다. 어림식은 M+1 ≈ 1.1 × (탄소 수) + 0.36 × (질소 수) 입니다.",
+      "이 어림은 세기를 정확히 재야 성립합니다. 검출기가 포화되면 기준 피크만 눌려 M+1 비율이 실제보다 커 보입니다. 어림하기 전에 기준 피크가 포화 구간에 있지 않은지 먼저 확인하십시오."
+    ]},
+    {h:"패턴이 무너져 보이는 경우", items:[
+      "다른 화합물의 봉우리가 M+1 이나 M+2 자리에 겹치면 없는 원소가 있는 것처럼 보입니다. 머무름 시간이 같은지, 크로마토그래피로 갈라져 있는지 먼저 확인합니다.",
+      "부가체 자체가 패턴을 만들기도 합니다. ⁴¹K 는 ³⁹K 대비 7.2% 라, [M+K]⁺ 는 할로젠이 하나도 없는 분자에도 M+2 를 7% 넘게 세웁니다. 황 하나가 만드는 4.5% 보다 큰 값이라 오독하기 쉽습니다.[^1]",
+      "단위 분해능에서는 ³⁷Cl 봉우리와 ¹³C 두 개짜리 봉우리가 같은 정수 자리에 겹칩니다. 세기만으로 조성을 정할 때는 이 겹침을 감안해야 합니다."
+    ]}
+  ],
+  tools:[
+    ["Cl 1개",      "M+2 가 기준 피크의 약 32%"],
+    ["Br 1개",      "약 97% — M 과 M+2 가 거의 같은 높이"],
+    ["S 1개",       "약 4.5%"],
+    ["Si 1개",      "약 3.4%"],
+    ["K (부가체)",   "약 7.2% — 화합물이 아니라 이온 폼이 만드는 값"],
+    ["O 1개",       "약 0.2% — 사실상 보이지 않음"]
+  ],
+  ref:[["¹³C / ¹²C","1.08%"],["¹⁵N / ¹⁴N","0.37%"],["³⁴S / ³²S","4.47%"],
+       ["³⁷Cl / ³⁵Cl","32.0%"],["⁸¹Br / ⁷⁹Br","97.3%"],["⁴¹K / ³⁹K","7.22%"],
+       ["³⁰Si / ²⁸Si","3.35%"],["¹⁸O / ¹⁶O","0.21%"]]
+},
+3:{
+  title:"부록 · 공칭질량이 같은 것을 가르기",
+  sections:[
+    {h:"질량 결손(mass defect)이 갈라 준다", items:[
+      "공칭질량이 같아도 정확질량은 다릅니다. ¹H 는 1.00783 으로 정수보다 무겁고 ¹⁶O 는 15.99491 로 가볍기 때문에, 수소가 많은 조성일수록 위로 밀립니다. 그래서 CO(27.9949)와 C₂H₄(28.0313)가 36 mDa 벌어집니다.",
+      "이 차이는 정수로만 읽는 장비에서는 존재하지 않습니다. 단위 분해능에서 \"28이 빠졌다\"는 말은 CO 일 수도, C₂H₄ 일 수도, N₂ 일 수도 있다는 뜻입니다.",
+      "고분해능에서는 반대로 소수점 넷째 자리가 곧 답입니다. 손실의 정확질량을 재면 조성이 하나로 정해지는 경우가 많습니다."
+    ]},
+    {h:"분해능과 질량 정확도는 다른 문제다", items:[
+      "분해능(resolving power) R = m/Δm 은 두 봉우리가 한 스펙트럼에 같이 있을 때 갈라 보는 능력입니다. m/z 300 에서 36 mDa 떨어진 두 봉우리를 가르려면 R ≈ 8,300 이 필요합니다.",
+      "질량 정확도(mass accuracy)는 봉우리 하나의 위치를 얼마나 맞게 재는가입니다. 손실이 CO 인지 C₂H₄ 인지 고르는 것은 대개 이쪽 문제입니다. 봉우리는 하나뿐이고, 그 위치를 36 mDa 보다 정확히 재기만 하면 됩니다.",
+      "m/z 300 에서 36 mDa 는 121 ppm 입니다. 5 ppm 장비라면 여유가 큽니다. 반면 N₂(28.0061)와 CO(27.9949)는 11 mDa 차이, m/z 300 기준 37 ppm 이라 조금 더 조심해야 합니다."
+    ]},
+    {h:"허용 오차를 좁힐수록 후보가 줄어든다", items:[
+      "실험실 탭의 역산 도구에서 ppm 만 바꿔 가며 후보 수가 어떻게 변하는지 직접 보십시오. 오차 창을 좁히면 후보가 거의 비례해서 줄어듭니다.",
+      "그래도 질량만으로 후보를 하나로 좁히기는 어렵습니다. 불포화도(RDB)와 질소 규칙으로 거르고, 남으면 동위원소 패턴과 MS/MS 를 함께 봐야 합니다.",
+      "분자량이 커질수록 같은 ppm 이라도 절대 오차 창이 넓어져 후보가 늘어납니다. 큰 분자를 질량만으로 동정하기 어려운 이유가 이것입니다."
+    ]}
+  ],
+  tools:[
+    ["단위 분해능",     "정수까지만 — 공칭질량이 같으면 구분 불가"],
+    ["R ≈ 10,000",   "m/z 300 에서 30 mDa 차이를 가름"],
+    ["R ≈ 30,000",   "대부분의 동일 공칭질량 짝을 가름"],
+    ["정확도 5 ppm",   "m/z 300 에서 ±1.5 mDa"],
+    ["정확도 1 ppm",   "m/z 300 에서 ±0.3 mDa"],
+    ["RDB·질소 규칙",  "질량으로 좁힌 뒤 남은 후보를 거르는 단계"]
+  ],
+  ref:[["CO / C₂H₄","27.9949 / 28.0313"],["N₂ / CO","28.0061 / 27.9949"],
+       ["CH₂O / C₂H₆","30.0106 / 30.0470"],["CH₂=C=O / C₃H₆","42.0106 / 42.0470"],
+       ["CO₂ / C₃H₈","43.9898 / 44.0626"],["HCOOH / C₂H₅OH","46.0055 / 46.0419"]]
+},
+4:{
+  title:"부록 · 전하 상태(charge state) 읽기",
+  sections:[
+    {h:"동위원소 간격이 전하를 알려 준다", items:[
+      "¹³C 와 ¹²C 의 차이는 1.00335 입니다. 전하가 z 인 이온에서는 m/z 축이 z 로 나뉘므로 이 간격이 1.00335/z 로 나타납니다. 1가면 약 1.003, 2가면 0.502, 3가면 0.334 입니다.",
+      "그래서 동위원소 봉우리 사이가 0.5 로 보이면 그 이온은 2가입니다. 다만 이 방법을 쓰려면 동위원소를 갈라 볼 수 있을 만큼의 분해능이 있어야 합니다. 단위 분해능에서는 2가 이온의 동위원소가 아예 갈라지지 않습니다.",
+      "전하를 잘못 배정하면 중성 질량이 정수배로 어긋납니다. 분자식 후보가 하나도 나오지 않을 때 가장 먼저 의심할 것이 전하 배정입니다."
+    ]},
+    {h:"다중 전하에서 중성 질량 구하기", items:[
+      "[M+zH]^z⁺ 의 관측 m/z 를 x 라 하면 M = z·x − z × 1.00728 입니다. 1가일 때와 달리 전하 수만큼 양성자를 빼야 한다는 점이 핵심입니다.",
+      "전자 질량을 빠뜨리지 않도록 주의합니다. 양성자는 1.00783 이 아니라 1.00728 이고, 2가에서는 이 차이가 두 배로 들어옵니다. 작아 보이지만 ppm 단위로는 큰 값입니다.",
+      "전하 상태가 여럿 보이면 각각에서 구한 M 이 서로 맞는지 확인합니다. 여러 전하 상태에서 같은 값이 나오면 배정이 옳다는 좋은 증거입니다."
+    ]},
+    {h:"혼합 알칼리 부가체", items:[
+      "산성 자리가 있으면서 알칼리 양이온화도 되는 분자에서는 [M+2Na−H]⁺ 처럼 소듐 둘이 붙고 양성자 하나가 빠진 이온이 나옵니다. 카복실산이 소듐염을 이룬 뒤 다시 양이온화된 형태로 보면 됩니다.",
+      "Na 와 K 가 섞이면 [M+Na+K−H]⁺ 가 됩니다. 소듐 하나짜리와 단순한 21.98 간격이 아니라서, 부가체 표 없이 눈으로 맞추기 어렵습니다.",
+      "이 계열이 눈에 띄면 시료나 용매의 알칼리 농도가 높다는 신호입니다. 전처리에서 탈염하면 스펙트럼이 눈에 띄게 단순해집니다."
+    ]}
+  ],
+  tools:[
+    ["1가",        "동위원소 간격 1.003"],
+    ["2가",        "0.502"],
+    ["3가",        "0.334"],
+    ["4가",        "0.251"],
+    ["중성 질량",   "M = z·(m/z) − z × 1.00728"],
+    ["후보 없음",   "전하 배정을 먼저 의심할 것"]
+  ],
+  ref:[["¹³C − ¹²C","1.00335"],["양성자(전자 보정)","1.00728"],
+       ["[M+2H]²⁺","(M + 2.0146) / 2"],["[M−2H]²⁻","(M − 2.0146) / 2"],
+       ["[M+2Na−H]⁺","M + 44.9712"],["[M+Na+K−H]⁺","M + 60.9451"]]
+},
 5:{
   title:"부록 · MS/MS — 왜 필요하고, 어디에 쓰이고, 무엇으로 하는가",
   sections:[
@@ -1218,6 +1343,131 @@ const APPENDIX_EN = {
        ["FT-ICR","above 10⁶ @ m/z 400, accuracy ~0.1 ppm"],["EI electron energy","70 eV"],
        ["what R = 1,000 means","separates m/z 100.0 from 100.1"]]
 },
+1:{
+  title:"Appendix · Controlling adducts",
+  sections:[
+    {h:"Why one compound splits across several peaks", items:[
+      "ESI does not break the molecule apart, but anything present in solution can stick to it. When one compound spreads across [M+H]⁺, [M+Na]⁺, [M+K]⁺ and [M+NH₄]⁺, the signal spreads with it. Collapsing the adducts onto one form does not just make interpretation easier — it raises sensitivity directly.",
+      "Which form dominates is decided by the molecule. A lone pair to offer, as in an amine or a pyridine, means it takes a proton and appears as [M+H]⁺. A sugar has no basic site but plenty of oxygens, and those oxygens wrap a Na⁺ the way a crown ether would, so [M+Na]⁺ wins instead.",
+      "The fastest way to confirm an adduct series is the spacing. Two peaks 21.9819 apart differ by H against Na; 37.9559 apart, by H against K. The spacing does not depend on the compound, so it works before you know the molecular mass."
+    ]},
+    {h:"Telling dimers and in-source fragments apart", items:[
+      "An observed m/z near twice what you expect suggests the dimer [2M+H]⁺. Dilution settles it: if the peak disappears as the concentration drops, it was a dimer; if its ratio to the other peaks holds, it is a separate compound.",
+      "An m/z 18 below expectation may be [M+H−H₂O]⁺, water lost in the source. This is fragmentation that happened before you applied CID, and it is a common reason for picking the wrong precursor. Lowering the source voltage (cone or fragmentor) reduces it.",
+      "Read the chromatogram alongside the spectrum. Ions of one compound rise and fall together at the same retention time; ions of different compounds do not. Judging from m/z alone loses this distinction."
+    ]},
+    {h:"Steering adducts with the mobile phase", items:[
+      "0.1% formic acid supplies protons, pushing the balance toward [M+H]⁺ and away from alkali adducts. In negative mode it does the opposite — it suppresses deprotonation — so for anions the acid comes out or is replaced with an ammonium salt.",
+      "Ammonium formate and ammonium acetate work in both polarities, which is why they are so often chosen. The idea is to deliberately produce one form: [M+NH₄]⁺ in positive mode, [M+HCOO]⁻ or [M+CH₃COO]⁻ in negative.",
+      "Sodium arrives whether or not you add it, leaching from glassware. Plastic vials cut it down if you want everything as [M+H]⁺, at the cost of plasticizer peaks. Plasticizers appear at fixed m/z values, so they are comparatively easy to screen out.",
+      "Non-volatile buffers have no place in LC-MS. Phosphate, Tris and ion-pairing reagents build up in the source and suppress ionization. Use volatile buffers only."
+    ]}
+  ],
+  tools:[
+    ["0.1% formic acid",          "Favours [M+H]⁺ · suppresses signal in negative mode"],
+    ["5–10 mM ammonium formate",  "Collapses onto [M+NH₄]⁺ / [M+HCOO]⁻ · both polarities"],
+    ["5–10 mM ammonium acetate",  "Holds pH near neutral · [M+CH₃COO]⁻"],
+    ["Plastic vials",             "Less sodium · plasticizer peaks instead"],
+    ["Phosphate / Tris buffers",  "Do not use — non-volatile, fouls the source"],
+    ["Diluting the sample",       "Identifies dimers · eases ion suppression"]
+  ],
+  ref:[["[M+Na]⁺ − [M+H]⁺","21.9819"],["[M+K]⁺ − [M+H]⁺","37.9559"],
+       ["[M+NH₄]⁺ − [M+H]⁺","17.0265"],["[M+H]⁺ − [M−H]⁻","2.0146"],
+       ["[M+H−H₂O]⁺ − [M+H]⁺","−18.0106"],["[2M+H]⁺","2M + 1.0073"]]
+},
+2:{
+  title:"Appendix · Working out isotope patterns by hand",
+  sections:[
+    {h:"Expanding the binomial yourself", items:[
+      "There is no table to memorise. For n chlorines, the terms of (0.7576 + 0.2424)ⁿ are the intensities of M, M+2, M+4 and so on. At n = 2 that gives 0.574 : 0.367 : 0.059, and dividing by the largest gives 100 : 64 : 10.[^1]",
+      "Mix elements and you multiply their expansions. One Br and one Cl means expanding (0.5069 + 0.4931) × (0.7576 + 0.2424), which puts M : M+2 : M+4 at 100 : 129 : 31.",
+      "That multiplication is exactly what the engine behind the lab tab does. Work it through once by hand and you stop needing the table."
+    ]},
+    {h:"Estimating carbon count from M+1", items:[
+      "¹³C is 1.07% abundant, so each carbon adds roughly 1.1% to M+1. An M+1 at 11% of the base peak means about ten carbons.",
+      "Nitrogen adds another 0.36% each. Read M+1 as carbon alone and you will overcount carbons in a nitrogen-rich molecule. The estimate is M+1 ≈ 1.1 × (carbons) + 0.36 × (nitrogens).",
+      "The estimate only holds if the intensities are measured properly. A saturated detector flattens the base peak, which makes the M+1 ratio look larger than it is. Check that the base peak is not in saturation before estimating."
+    ]},
+    {h:"When the pattern looks wrong", items:[
+      "A peak from another compound landing on M+1 or M+2 makes an element appear that is not there. Check the retention time and whether chromatography has actually separated the two.",
+      "The adduct can create a pattern of its own. ⁴¹K is 7.2% relative to ³⁹K, so [M+K]⁺ raises M+2 above 7% on a molecule with no halogen at all. That is more than the 4.5% a single sulfur produces, and easy to misread.[^1]",
+      "At unit resolution the ³⁷Cl peak and the two-¹³C peak fall on the same integer. Allow for that overlap before deciding a composition from intensities alone."
+    ]}
+  ],
+  tools:[
+    ["1 × Cl",        "M+2 at about 32% of the base peak"],
+    ["1 × Br",        "About 97% — M and M+2 nearly equal"],
+    ["1 × S",         "About 4.5%"],
+    ["1 × Si",        "About 3.4%"],
+    ["K (as adduct)", "About 7.2% — from the ion form, not the compound"],
+    ["1 × O",         "About 0.2% — effectively invisible"]
+  ],
+  ref:[["¹³C / ¹²C","1.08%"],["¹⁵N / ¹⁴N","0.37%"],["³⁴S / ³²S","4.47%"],
+       ["³⁷Cl / ³⁵Cl","32.0%"],["⁸¹Br / ⁷⁹Br","97.3%"],["⁴¹K / ³⁹K","7.22%"],
+       ["³⁰Si / ²⁸Si","3.35%"],["¹⁸O / ¹⁶O","0.21%"]]
+},
+3:{
+  title:"Appendix · Separating equal nominal masses",
+  sections:[
+    {h:"Mass defect is what separates them", items:[
+      "Equal nominal mass does not mean equal accurate mass. ¹H at 1.00783 sits above the integer and ¹⁶O at 15.99491 below it, so the more hydrogens a composition carries, the higher it rides. That is why CO (27.9949) and C₂H₄ (28.0313) end up 36 mDa apart.",
+      "On an instrument that reads integers, that difference does not exist. At unit resolution, \"a loss of 28\" means CO or C₂H₄ or N₂, with nothing to choose between them.",
+      "At high resolution the fourth decimal is the answer. Measure the accurate mass of the loss and the composition is often fixed outright."
+    ]},
+    {h:"Resolving power and mass accuracy are different questions", items:[
+      "Resolving power, R = m/Δm, is the ability to separate two peaks that sit in the same spectrum. Separating two peaks 36 mDa apart at m/z 300 needs R ≈ 8,300.",
+      "Mass accuracy is how correctly you place a single peak. Deciding whether a loss was CO or C₂H₄ is usually this second question: there is only one peak, and you need its position to better than 36 mDa.",
+      "At m/z 300, 36 mDa is 121 ppm — a wide margin for a 5 ppm instrument. N₂ (28.0061) against CO (27.9949) is tighter at 11 mDa, or 37 ppm at m/z 300, and calls for more care."
+    ]},
+    {h:"A tighter tolerance means fewer candidates", items:[
+      "Change nothing but the ppm figure in the reverse tool on the lab tab and watch the candidate count. Narrowing the window cuts the list almost proportionally.",
+      "Even so, mass alone rarely leaves one candidate. Filter with ring-and-double-bond equivalents and the nitrogen rule, and if candidates remain, bring in the isotope pattern and MS/MS.",
+      "The heavier the molecule, the wider the absolute window at the same ppm, and the more candidates survive. That is why identifying large molecules from mass alone is so hard."
+    ]}
+  ],
+  tools:[
+    ["Unit resolution", "Integers only — equal nominal masses cannot be told apart"],
+    ["R ≈ 10,000",      "Separates a 30 mDa gap at m/z 300"],
+    ["R ≈ 30,000",      "Separates most equal-nominal-mass pairs"],
+    ["5 ppm accuracy",  "±1.5 mDa at m/z 300"],
+    ["1 ppm accuracy",  "±0.3 mDa at m/z 300"],
+    ["RDB + N rule",    "Filters what is left after mass has narrowed the list"]
+  ],
+  ref:[["CO / C₂H₄","27.9949 / 28.0313"],["N₂ / CO","28.0061 / 27.9949"],
+       ["CH₂O / C₂H₆","30.0106 / 30.0470"],["CH₂=C=O / C₃H₆","42.0106 / 42.0470"],
+       ["CO₂ / C₃H₈","43.9898 / 44.0626"],["HCOOH / C₂H₅OH","46.0055 / 46.0419"]]
+},
+4:{
+  title:"Appendix · Reading the charge state",
+  sections:[
+    {h:"Isotope spacing tells you the charge", items:[
+      "¹³C and ¹²C differ by 1.00335. On an ion of charge z the m/z axis is divided by z, so that spacing appears as 1.00335/z: about 1.003 singly charged, 0.502 doubly, 0.334 triply.",
+      "So isotope peaks half a unit apart mean a doubly charged ion. The method needs enough resolving power to separate the isotopes in the first place — at unit resolution the isotopes of a 2+ ion do not separate at all.",
+      "Assign the charge wrongly and the neutral mass comes out wrong by an integer factor. When a formula search returns nothing at all, the charge assignment is the first thing to doubt."
+    ]},
+    {h:"Getting the neutral mass from a multiply charged ion", items:[
+      "For [M+zH]^z⁺ observed at x, M = z·x − z × 1.00728. The part that differs from the singly charged case is that you remove one proton per charge, not one in total.",
+      "Do not drop the electron. A proton is 1.00728, not 1.00783, and at 2+ that difference enters twice. It looks small and is large in ppm.",
+      "When several charge states are visible, check that each gives the same M. Agreement across charge states is good evidence that the assignment is right."
+    ]},
+    {h:"Mixed alkali adducts", items:[
+      "A molecule with an acidic site that also takes alkali cations can appear as [M+2Na−H]⁺ — two sodiums on, one proton off. Read it as a carboxylic acid that formed the sodium salt and was then cationised again.",
+      "With both Na and K around you get [M+Na+K−H]⁺. It does not sit a simple 21.98 from the single-sodium form, so it is hard to match by eye without an adduct table.",
+      "Seeing this series at all is a signal that the alkali content of the sample or solvent is high. Desalting during sample preparation simplifies the spectrum noticeably."
+    ]}
+  ],
+  tools:[
+    ["1+",             "Isotope spacing 1.003"],
+    ["2+",             "0.502"],
+    ["3+",             "0.334"],
+    ["4+",             "0.251"],
+    ["Neutral mass",   "M = z·(m/z) − z × 1.00728"],
+    ["No candidates",  "Doubt the charge assignment first"]
+  ],
+  ref:[["¹³C − ¹²C","1.00335"],["Proton (electron-corrected)","1.00728"],
+       ["[M+2H]²⁺","(M + 2.0146) / 2"],["[M−2H]²⁻","(M − 2.0146) / 2"],
+       ["[M+2Na−H]⁺","M + 44.9712"],["[M+Na+K−H]⁺","M + 60.9451"]]
+},
 5:{
   title:"Appendix · MS/MS — why it is needed, where it is used, what it is done with",
   sections:[
@@ -1307,6 +1557,9 @@ const BRIEF_NOTES = {
 };
 
 const APPX_NOTES = {
+2:[
+  {t:"NIST Atomic Weights and Isotopic Compositions (molmass 2026.8.15 경유)"}
+],
 0:[
   {t:"Ionization Source Technology Overview, Thermo Fisher Scientific",
    u:"https://www.thermofisher.com/us/en/home/industrial/mass-spectrometry/mass-spectrometry-learning-center/mass-spectrometry-technology-overview/ionization-source-technology-overview.html"},
@@ -1971,10 +2224,14 @@ function runFinder(){
   if(neutralMass <= 0){ out.innerHTML = `<p class="sub">${t("tooSmall")}</p>`; return; }
 
   // 뺄 원자가 모자라 이 부가체를 만들 수 없는 후보는 계산 m/z 가 나오지 않는다.
-  // 표에 NaN 을 찍는 대신 후보에서 빼고, 개수도 남은 것만 센다.
+  // 표에서 빼고 개수도 남은 것만 센다. 이온 조성은 여기서 한 번만 구해 붙여 보낸다.
+  // monoisotopicMass(null) 은 for...in 이 빈 순회라 NaN 이 아니라 0 을 돌려준다.
+  // 걸러진 값을 아래로 넘기면 표에 NaN 도 아닌 그럴듯한 숫자가 찍히므로,
+  // 이온을 여기서 붙여 보내 그리는 쪽이 null 을 만질 일이 없게 한다.
   // 넉넉히 받아 거른 뒤 자른다. 25개를 먼저 자르면 걸러진 만큼 표가 짧아진다.
   const hits = findFormulas(neutralMass, tol, 80)
-                 .filter(x => ionFormula(x.c, ad))
+                 .map(x => Object.assign({}, x, {ion: ionFormula(x.c, ad)}))
+                 .filter(x => x.ion)
                  .slice(0, 25);
   if(!hits.length){
     out.innerHTML = `<p class="sub">${t("neutralMass")} ${neutralMass.toFixed(4)} — ${t("noCand")}</p>`;
@@ -1985,7 +2242,7 @@ function runFinder(){
           `<table><thead><tr><th>${t("thFormula")}</th><th class="num">${t("thCalcMz")}</th>` +
           `<th class="num">${t("thPpmErr")}</th><th class="num">${t("thRdb")}</th></tr></thead><tbody>`;
   hits.forEach(x => {
-    const calcMz = (monoisotopicMass(ionFormula(x.c, ad)) - ad.z*ELECTRON) / az;
+    const calcMz = (monoisotopicMass(x.ion) - ad.z*ELECTRON) / az;
     const ppmErr = (calcMz - mz) / mz * 1e6;
     h += `<tr><td>${formatFormula(x.c)}</td><td class="num">${calcMz.toFixed(4)}</td>` +
          `<td class="num">${ppmErr.toFixed(2)}</td><td class="num">${x.rdb}</td></tr>`;

@@ -1,0 +1,32 @@
+name: sweep
+
+# 앱 자체에는 의존성이 없다. playwright 는 여기서만 쓰는 테스트 도구이고,
+# 배포되는 파일(index.html)에는 아무 영향이 없다.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PLAYWRIGHT_VERSION: 1.62.1     # 재현을 위해 고정. 올릴 때는 여기만 고치면 된다.
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: playwright 설치
+        run: |
+          npm install --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          npx playwright install --with-deps chromium
+
+      - name: 회귀 스위트
+        run: node test/sweep.mjs

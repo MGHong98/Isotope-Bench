@@ -62,9 +62,17 @@ open index.html          # macOS
 | 4 | 혼합 알칼리 · 2가 이온 · Br+Cl 혼합 패턴 |
 | 5 | F, I, Si · 2가 음이온 · H₃PO₄ 손실 |
 
-각 난이도에는 **브리핑**(왜 그렇게 되는가 · 실험대에서 · 기억할 숫자)이 붙어 있고,
-문헌 출처가 미주로 달려 있습니다. 난이도 0과 5에는 기기·이온화 개론과
-데이터 처리 소프트웨어를 다루는 **부록**이 추가로 들어 있습니다.
+각 난이도에는 **브리핑**(왜 그렇게 되는가 · 실험대에서 · 기억할 숫자)과
+**부록**(그 단계에서 실제로 쓰는 도구와 진단용 숫자)이 붙어 있습니다.
+
+| 난이도 | 부록 주제 |
+|---|---|
+| 0 | 이온화 방식과 질량 분석기 — 소스 고르기, 분석기 성능 비교 |
+| 1 | 부가체 통제 — 이동상 첨가제, 이합체·소스 조각 가려내기 |
+| 2 | 동위원소 패턴을 손으로 풀기 — 이항 전개, M+1로 탄소 수 어림 |
+| 3 | 공칭질량이 같은 것 가르기 — 질량 결손, 분해능 대 질량 정확도 |
+| 4 | 전하 상태 읽기 — 동위원소 간격, 다중 전하에서 중성 질량 |
+| 5 | 질량 결손과 배경 오염 — 데이터 처리 소프트웨어 |
 
 ---
 
@@ -155,6 +163,29 @@ open index.html          # macOS
 
 `정보` 탭의 제작 정보(`BUILD`)를 고치면 무결성 해시가 달라집니다.
 `정보` 탭에 표시되는 `현재 해시`를 `BUILD_DIGEST` 상수에 옮겨 적어야 다시 `일치`로 표시됩니다.
+
+---
+
+## 회귀 테스트
+
+앱이 파일 하나라, 문제 하나를 손대다 생성기가 조용히 깨져도 화면에는 오류가 뜨지 않습니다.
+`test/sweep.mjs` 는 그런 종류를 잡습니다. 실제로 한 번 나왔던 결함마다 검사가 하나씩 있습니다.
+
+```bash
+npm install --no-save playwright@1.62.1
+npx playwright install chromium
+node test/sweep.mjs
+```
+
+검사하는 것: 알려진 이온의 단일동위원소 질량, Cl·Br 세기비, 분포 확률 총합,
+난이도 0–5 × 생성기 4종 불변식(정답이 보기에 있는가·보기 중복·해설 부호),
+패턴 문제의 부가체가 스스로 M+2 를 만들지 않는가, 난이도 라벨이 실제로 나오는 것만
+약속하는가, 1 mDa 안에서 갈라진 피크, `T.ko`/`T.en` 키 짝, 미주 번호와 출처 짝,
+6난이도 × 2언어 화면 조작, 역산기 출력값 범위, 기록 지우기 뒤 화면 갱신, 무결성 해시.
+
+앱 자체에는 여전히 의존성이 없습니다. playwright 는 테스트에서만 쓰고
+배포되는 `index.html` 에는 영향이 없습니다. GitHub Actions(`.github/workflows/ci.yml`)가
+`main` 으로 가는 푸시와 PR 마다 같은 것을 돌립니다.
 
 ---
 
@@ -267,8 +298,17 @@ side by side, so you meet the case for high resolution as a number rather than a
 | 5 | F, I, Si · doubly charged anions · H₃PO₄ loss |
 
 Each level opens with a **briefing** (why it happens · at the bench · numbers to
-remember) with literature sources in the endnotes. Levels 0 and 5 carry an extra
-**appendix** covering instruments and ionization, and data-processing software.
+remember) and an **appendix** (the tools that level actually uses, and the numbers
+worth having to hand).
+
+| Level | Appendix |
+|---|---|
+| 0 | Ionization and mass analysers — choosing a source, comparing analysers |
+| 1 | Controlling adducts — mobile-phase additives, dimers and in-source fragments |
+| 2 | Isotope patterns by hand — binomial expansion, carbon count from M+1 |
+| 3 | Separating equal nominal masses — mass defect, resolution vs mass accuracy |
+| 4 | Reading the charge state — isotope spacing, neutral mass when multiply charged |
+| 5 | Mass defect and background contamination — data-processing software |
 
 ---
 
@@ -368,6 +408,33 @@ adding an entry, fill in both sides — either as `P(ko, en)` or in both `T.ko` 
 Editing the build information (`BUILD`) shown in the `About` tab changes the integrity
 hash. Copy the `Computed hash` shown in that tab into the `BUILD_DIGEST` constant for
 it to read `Match` again.
+
+---
+
+## Regression suite
+
+The whole app is one file, so a change made while adding a question can break the
+generator without anything appearing on screen. `test/sweep.mjs` is aimed at exactly
+that: every defect that has actually turned up here has a check of its own.
+
+```bash
+npm install --no-save playwright@1.62.1
+npx playwright install chromium
+node test/sweep.mjs
+```
+
+It checks monoisotopic masses of known ions, Cl and Br intensity ratios, distribution
+probability sums, generator invariants across levels 0-5 and all four question types
+(answer present among the options, no duplicate options, no doubled sign in the
+explanation), that no adduct used in a pattern question contributes its own M+2, that
+each level label promises only what the generator produces, that no two peaks survive
+closer than 1 mDa, `T.ko`/`T.en` key parity, footnote-to-source pairing, a UI pass over
+six levels in both languages, the value range of the formula finder's output, that
+clearing the log redraws the view, and the integrity hash.
+
+The app itself still has no dependencies: playwright is used only by the test and never
+reaches the published `index.html`. GitHub Actions (`.github/workflows/ci.yml`) runs the
+same suite on every push and pull request to `main`.
 
 ---
 
