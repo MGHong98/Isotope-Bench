@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 파비콘. 외부 파일을 만들지 않으려고 data URI 로 넣는다.
+     막대 높이는 Cl2 의 M : M+2 : M+4 = 100 : 64 : 10 이다. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='6'%20fill='%2317222B'/%3E%3Cg%20fill='%23EDEFE9'%3E%3Crect%20x='6'%20%20y='4'%20%20width='4'%20height='22'/%3E%3Crect%20x='14'%20y='12'%20width='4'%20height='14'/%3E%3Crect%20x='22'%20y='24'%20width='4'%20height='2'/%3E%3C/g%3E%3Crect%20x='4'%20y='26.5'%20width='24'%20height='1.5'%20fill='%231E4D5C'/%3E%3C/svg%3E">
 <meta name="description" content="질량분석 입문자를 위한 스펙트럼 판독 연습 — 동위원소 패턴, 부가체, 중성 손실. 파일 하나로 오프라인에서 동작합니다. / A single-file spectrum-reading trainer for mass spectrometry beginners.">
 <title>Isotope Bench — 질량분석 판독 연습</title>
 <style>
@@ -428,8 +431,8 @@ function deepFreeze(o){
 
 const BUILD = deepFreeze({
   app:        "Isotope Bench",
-  version:    "1.1.0",
-  built:      "2026-09-04",
+  version:    "1.1.1",
+  built:      "2026-09-09",
   author:     { ko: "홍민기",   en: "Mingi Hong" },
   degree:     { ko: "이학 석사", en: "M.S." },
   repo:       "https://github.com/MGHong98/Isotope-Bench",   // 이슈 탭이 연락 창구가 됩니다.
@@ -446,7 +449,7 @@ function canonical(v){
 }
 const buildCanonical = () => canonical(BUILD);
 
-const BUILD_DIGEST = "b0dc2c91082cefac539dc0549f3e7caa6abcee2125456e211b114990cbfeae28";
+const BUILD_DIGEST = "6115e490b2911891a41ed94facb41266922a98000ca99f29b030c20e38318ec4";
 
 async function buildHash(){
   try{

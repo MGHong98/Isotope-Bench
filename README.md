@@ -181,7 +181,8 @@ node test/sweep.mjs
 난이도 0–5 × 생성기 4종 불변식(정답이 보기에 있는가·보기 중복·해설 부호),
 패턴 문제의 부가체가 스스로 M+2 를 만들지 않는가, 난이도 라벨이 실제로 나오는 것만
 약속하는가, 1 mDa 안에서 갈라진 피크, `T.ko`/`T.en` 키 짝, 미주 번호와 출처 짝,
-6난이도 × 2언어 화면 조작, 역산기 출력값 범위, 기록 지우기 뒤 화면 갱신, 무결성 해시.
+6난이도 × 2언어 화면 조작, 역산기 출력값 범위, 기록 지우기 뒤 화면 갱신, 무결성 해시,
+외부 리소스를 불러오지 않는가(파비콘까지 data URI 인가).
 
 앱 자체에는 여전히 의존성이 없습니다. playwright 는 테스트에서만 쓰고
 배포되는 `index.html` 에는 영향이 없습니다. GitHub Actions(`.github/workflows/ci.yml`)가
@@ -430,7 +431,8 @@ explanation), that no adduct used in a pattern question contributes its own M+2,
 each level label promises only what the generator produces, that no two peaks survive
 closer than 1 mDa, `T.ko`/`T.en` key parity, footnote-to-source pairing, a UI pass over
 six levels in both languages, the value range of the formula finder's output, that
-clearing the log redraws the view, and the integrity hash.
+clearing the log redraws the view, the integrity hash, and that nothing outside the file
+is ever fetched — the favicon included.
 
 The app itself still has no dependencies: playwright is used only by the test and never
 reaches the published `index.html`. GitHub Actions (`.github/workflows/ci.yml`) runs the
