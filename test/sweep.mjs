@@ -299,7 +299,25 @@ await page.waitForTimeout(300);
         `briefed ${st.briefed} · 브리핑 펼침 ${st.briefOpen}`);
 }
 
-/* ── 11. 콘솔 ── */
+/* ── 11. 배포되는 파일이 외부에 아무것도 요청하지 않는가 ──
+       "의존성 없음"이 이 프로젝트의 성질이다. 파비콘도 data URI 라야 한다.
+       브리핑·부록 미주의 출처 링크(a[href])는 사람이 눌러서 여는 것이라 예외다. */
+{
+  const r = await page.evaluate(() => {
+    const ext = [];
+    for (const el of document.querySelectorAll('script[src], link[href], img[src], iframe, video, audio, source')) {
+      const u = el.getAttribute('src') || el.getAttribute('href') || '';
+      if (!/^data:/i.test(u)) ext.push(`${el.tagName.toLowerCase()} ${u.slice(0, 60)}`);
+    }
+    const icon = document.querySelector('link[rel~="icon"]');
+    return { ext, hasIcon: !!icon, iconIsData: !!icon && /^data:/i.test(icon.getAttribute('href') || '') };
+  });
+  check('외부 리소스를 불러오지 않음', r.ext.length === 0, r.ext.join(' | '));
+  check('파비콘이 있고 data URI 임', r.hasIcon && r.iconIsData,
+        `link[rel=icon] ${r.hasIcon ? '있음' : '없음'} · data URI ${r.iconIsData}`);
+}
+
+/* ── 12. 콘솔 ── */
 check('콘솔 오류 없음', consoleErrors.length === 0, [...new Set(consoleErrors)].slice(0, 3).join(' | '));
 
 await browser.close();
